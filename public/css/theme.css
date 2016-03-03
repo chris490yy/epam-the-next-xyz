@@ -49,3 +49,10 @@ body {
   height: 60px;
   margin-bottom: 30px;
 }
+
+.title-background {
+  background-image: url("../img/1.jpg");
+  background-size: cover;
+  background-position: 50% 50%;
+  color: red;
+}
