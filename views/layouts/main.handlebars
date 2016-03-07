@@ -12,10 +12,10 @@
     <title>The Next Drink</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
   </head>
 
   <body>
@@ -53,7 +53,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    {{!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> --}}
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    {{#each scripts}}<script src="{{this}}"></script>{{/each}}
   </body>
 </html>
