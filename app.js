@@ -29,6 +29,7 @@ var hbs = exphbs.create({defaultLayout: 'main'});
 var app = express();
 
 var api = require('./routes/api');
+var api_for_category = require('./routes/api_for_category');
 
 // setup handlebars
 app.engine('handlebars', hbs.engine);
@@ -57,37 +58,37 @@ app.get('/about', function(req, res) {
   res.locals.scripts.push('/js/about.js');
   res.render('about');
 });
-
-app.get('/articles/:id', function(req, res) {
+//-------------------use mongodb data
+app.get('/categories/:id', function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Header", "X-Requestd-With");
-  Article.findById(req.params.id, function(err, article) {
+  Article.findById(req.params.id, function(err, data) {
     //console.log(article);
     if(!err){
-      console.log(article);
-      res.render('article', article);
+      console.log(data);
+      res.render('article', data);
     } else {
       res.send(404, "page not found");
     }
   });
 });
 //------------------- USE LOCAL DATA
-// app.get('/article/:id', function(req, res) {
-//   var fs = require('fs');
-//   var _ = require('underscore');
-//   var obj;
+app.get('/article/:id', function(req, res) {
+  var fs = require('fs');
+  var _ = require('underscore');
+  var obj;
 
-//   fs.readFile('./data/articles.json', 'utf8', function (err, data) {
-//     if (err) throw err;
+  fs.readFile('./data/articles.json', 'utf8', function (err, data) {
+    if (err) throw err;
 
-//     data = _.filter(JSON.parse(data), function(item) {
-//         return item.id == req.params.id;
-//     });
-//     console.log(data);
-//     res.render('article', data[0]);
-//   });
+    data = _.filter(JSON.parse(data), function(item) {
+        return item.id == req.params.id;
+    });
+    console.log(data);
+    res.render('article', data[0]);
+  });
 
-// });
+});
 
 //---------------------
 
@@ -117,8 +118,10 @@ app.get('/dashboard', function (req, res) {
 
 
 
-// the api (note that typically you would likely organize things a little differently to this)
+// the api (note that typically you would likely organize things a
+//little differently to this)
 app.use('/api', api);
+app.use('/api_for_category', api_for_category);
 
 // create the server based on express
 var server = require('http').createServer(app);
