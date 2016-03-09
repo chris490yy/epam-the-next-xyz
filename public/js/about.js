@@ -1,5 +1,7 @@
 $(function() {
+  var url = '/api_for_category/categories';
   getAllData('');
+
   $("form").submit(function(e) {
     e.preventDefault();
     $(".article").html("");
@@ -8,13 +10,31 @@ $(function() {
     $("input").val('');
   });
 
+  // $("input").blur(function() {
+  //   $('.drop-area').html("");
+  // });
+
   $("input").keyup(function() {
-    //console.log($("input").val());
-    var searchContent = $("input").val();
+    $('.drop-area').html("");
+    var searchContent = $("input").val().trim();
+    $.ajax({
+      method: "GET",
+      url: url,
+      success: function(data) {
+        var reg = new RegExp(searchContent,'i');
+        $(data).each(function(key, item) {
+          if(searchContent === '')return;
+          if(reg.test(item.title)){
+            createDrop(item);
+          }
+        });
+      },
+      error: errorFunc
+    });
+
   });
 
   function getAllData(keyword) {
-    var url = '/api_for_category/categories';
     $.ajax({
       method: "GET",
       url: url,
@@ -26,15 +46,12 @@ $(function() {
           }
         });
       },
-      error: function(error) {
-        alert("Doh!");
-      }
+      error: errorFunc
     });
   }
 
   function createBlock(item) {
     var a = $("<a>", {href: "categories/" + item._id});
-    console.log($("a").attr("href"));
     var div = $("<div>", {class: "col-md-4"});
     var p = $("<p>", {class: "text-center"});
     var img = $("<img>", {class: "img"});
@@ -44,5 +61,20 @@ $(function() {
     a.append(p);
     div.append(a);
     $(".article").append(div);
+  }
+
+  function createDrop(item) {
+    var div = $("<div>", {class: "drop"});
+    var p = $("<p>");
+    var a = $("<a>", {href: "categories/" + item._id});
+    p.html(item.title);
+    a.append(p);
+    div.append(a);
+    $(".drop-area").append(div);
+  }
+
+
+  function errorFunc(e) {
+    alert("Doh!");
   }
 });
